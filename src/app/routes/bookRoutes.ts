@@ -24,13 +24,17 @@ bookRoutes.post("/", async (req: Request, res: Response) => {
 
 bookRoutes.get("/", async (req: Request, res: Response) => {
   try {
+    if (!req.query) {
+      return await Book.find();
+    }
+
     const {
       filter,
       sortBy = "createdAt",
       sort = "desc",
       limit = "10",
     } = req.query;
-    const query: any = [];
+    const query: any = {};
     if (filter) {
       query.genre = filter;
     }
@@ -67,7 +71,7 @@ bookRoutes.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
-bookRoutes.patch("/:id", async (req: Request, res: Response) => {
+bookRoutes.put("/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const updated = req.body;

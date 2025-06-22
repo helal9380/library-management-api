@@ -1,6 +1,5 @@
 /** @format */
 
-import { trace } from "console";
 import express, { Request, Response } from "express";
 import { Book } from "../model/bookModel";
 import { Borrow } from "../model/borrowModel";
@@ -20,9 +19,9 @@ borrowRoutes.post("/", async (req: Request, res: Response) => {
     }
 
     // create borrow
-    const borrow = Borrow.create({ book: bookId, quantity, dueDate });
+    const borrow = await Borrow.create({ book: bookId, quantity, dueDate });
     res.status(201).json({
-      success: trace,
+      success: true,
       message: "Book borrowed successfully",
       data: borrow,
     });
@@ -35,34 +34,37 @@ borrowRoutes.get("/", async (req: Request, res: Response) => {
   try {
     const result = await Borrow.aggregate([
       {
+        // stage 1
         $group: {
           _id: "$book",
           totalQuantity: { $sum: "$quantity" },
         },
       },
+      // stage 2
       {
         $lookup: {
           from: "books",
           localField: "_id",
           foreignField: "_id",
-          as: "bookDetails",
+          as: "bookSummary",
         },
       },
+      // stage 3
       {
-        $unwind: "$bookDetails",
+        $unwind: "$bookSummary",
       },
+      // stage 4
       {
         $project: {
           _id: 0,
           book: {
-            title: "$bookDetails.title",
-            isbn: "$bookDetails.isbn",
+            title: "$bookSummary.title",
+            isbn: "$bookSummary.isbn",
           },
           totalQuantity: 1,
         },
       },
     ]);
-
     res.json({
       success: true,
       message: "Borrowed books summary retrieved successfully",

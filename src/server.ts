@@ -1,16 +1,17 @@
 /** @format */
 
+import "dotenv/config";
 import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 
-const port = 3000;
+const port = process.env.PORT;
 let server: Server;
 
 async function main() {
   try {
     await mongoose.connect(
-      "mongodb+srv://helaldb:helaldb@cluster0.0qkhitp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+      `mongodb+srv://${process.env.BONGODB_USER}:${process.env.BONGODB_PASSWORD}@cluster0.0qkhitp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
     );
     console.log("connected to mongoose");
     server = app.listen(port, () => {
