@@ -7,6 +7,7 @@ const bookSchema = new Schema<IBook>(
   {
     title: { type: String, required: true },
     author: { type: String, required: true },
+    image: { type: String },
     genre: { type: String, enum: Object.values(Genre), required: true },
     isbn: { type: String, required: true, unique: true },
     description: String,

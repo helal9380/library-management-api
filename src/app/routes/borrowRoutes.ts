@@ -9,6 +9,7 @@ export const borrowRoutes = express.Router();
 borrowRoutes.post("/", async (req: Request, res: Response) => {
   try {
     const { book: bookId, quantity, dueDate } = req.body;
+    console.log(bookId);
     const book = await Book.findById(bookId);
     if (!book || book.copies < quantity) {
       res.status(400).json({

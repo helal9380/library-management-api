@@ -14,6 +14,7 @@ export interface IBook {
   author: string;
   genre: Genre;
   isbn: string;
+  image?: string;
   description?: string;
   copies: number;
   available: boolean;

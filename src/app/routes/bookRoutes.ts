@@ -24,10 +24,6 @@ bookRoutes.post("/", async (req: Request, res: Response) => {
 
 bookRoutes.get("/", async (req: Request, res: Response) => {
   try {
-    if (!req.query) {
-      return await Book.find();
-    }
-
     const {
       filter,
       sortBy = "createdAt",
